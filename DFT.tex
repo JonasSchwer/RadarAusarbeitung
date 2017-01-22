@@ -1,0 +1,58 @@
+%DFT
+
+\subsection{Diskrete Fouriertransformation}
+
+In der Signalverarbeitung kann die Fouriertransformation als eine Abbildung aufgefasst werden, welche ein im Zeitbereich gegebenes, periodisches Signal in den Frequenzbereich überführt. Für eine sinuidale Schwingung erhält man mittels der Fouriertransformation die darin ethaltenen Frequenzen und deren Gewichtung. \\
+Nun sind in der digitalen Signalverarbeitung jedoch nie zeitkontinuierliche Signale gegeben, sondern immer nur ein Daten-Vektor mit deren diskreter Abtastung. Dies motitivert, die Fouriertransformation auch für $N$-elementige Vektoren zu definieren, welche wir dann Diskrete Fouriertransformation (Descrete Fourier Transform, DFT) nennen.
+
+\begin{defn}[\cite{BurgHaf}*{Definition 8.7}]
+
+Die Abbildung $\calF_N: \C^N\to\C^N$, die einem Daten-Vektor $f=\transp{(f_0,\ldots,f_{N-1})} \in\C^N$ durch
+
+\begin{displaymath}
+\hat{c}_k = \frac{1}{N} \sum_{j=0}^{N-1} f_j \ehoch{-\imag 2 \pi k j/N} , k=0,\ldots, N-1
+\end{displaymath}
+den Vektor $\hat{c} = \transp{(\hat{c}_0,\ldots,\hat{c}_{N-1})} \in\C^N$ zuordnet, heißt \emph{diskrete Fouriertransformation mit $N$ Stützstellen}, DFT($N$).
+\end{defn}
+
+\begin{satz}[\cite{BurgHaf}*{Satz 8.9} und (8.84)-(8.87)]
+Aussagen der Fouriertransformation lassen sich auf die diskrete Fouriertransformation übertragen.\newline
+Sei $\hat{c} = \calF_N f$ zu einem Daten-Vektor $f=\transp{(f_0,\ldots,f_{N-1})} \in\C^N$.
+\begin{enumerate}[(i)]
+\item Für die \emph{inverse diskrete Fouriertransformation}  $\calF_N^{-1}: \C^N\to\C^N$ gilt:
+    \begin{displaymath}
+        f_k = \calF_N^{-1}\hat{c} = \sum_{j=0}^{N-1} \hat{c}_j \ehoch{2\imag\pi jk/N}, \quad k=0, \ldots, N-1,
+    \end{displaymath}
+
+\item Ist durch
+\begin{align*}
+&*: \C^N\times\C^N\to\C^N \\
+&(f*g)_k = \frac{1}{N} \sum_{j\in J}^{N-1} f_j g_{k-j+1}, \quad J=\{j\in\N:~\max\{1,k+1-N\}\leq j\leq k \},~k=0,\ldots,N-1
+\end{align*} 
+die diskrete Faltung definiert, so gilt
+\begin{displaymath}
+\calF_N(f*g) = \calF_N f ~ \calF_N g.
+\end{displaymath}
+\end{enumerate}
+
+\end{satz}
+\begin{proof}
+Siehe Quelle.
+\end{proof}
+
+Die diskrete Fouriertransformation lässt sich dann mit folgendem Alogrithmus realisieren:
+\begin{algorithm}[H]
+	\caption{DFT: $\quad \hat{c} = \calF_N f, \quad f\in\C^N$ gegeben}
+	\label{DFT}
+	
+	\begin{algorithmic}
+		\For{ $k = 0,\ldots, N-1$}
+    		\State $\hat{c}_{k} = 0$
+	        \For{$j= 0,\ldots,N-1$}
+	            \State $\hat{c}_k = \hat{c}_k + f_j\ehoch{-2\imag\pi kj/N}$
+	         \EndFor	
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+Mit den zwei \texttt{for}-Schleifen hat die DFT($N$) bei dieser naiven Implementierung den Aufwand $\calO(N^2)$. Dies lässt sich beschleunigen, wie im nächsten Abschnitt zu sehen sein wird.

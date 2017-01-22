@@ -1,0 +1,206 @@
+% !TeX encoding = UTF-8
+% maindoc
+
+\documentclass[a4paper,12pt,oneside,german,toc=bibliography]{scrbook} 
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts,amscd,amsbsy,amsxtra,amsthm}
+
+\usepackage[alphabetic,nobysame,bibtex-style]{amsrefs}
+\makeatletter
+\renewcommand\PrintNames@a[4]{%
+    \PrintSeries{\name}
+    {#1}
+    {}{ und \set@othername}
+    {;}{ \set@othername}
+    {}{ und \set@othername}
+    {#2}{#4}{#3}%
+}
+\makeatother
+
+
+\usepackage{dsfont}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{upgreek,textcomp}
+\usepackage{cleveref}
+\usepackage[Algorithmus]{algorithm}
+\usepackage{algpseudocode}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage{ziffer}
+\usepackage{booktabs}
+\usepackage{courier}
+
+\makeatletter
+\newcommand{\specialcell}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\ignorespaces\fi}
+\makeatother
+
+\usepackage[numbered,autolinebreaks,bw]{mcode}   %framed
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{bem}[defn]{Bemerkung}
+
+\theoremstyle{plain}
+\newtheorem{satz}[defn]{Satz}
+\newtheorem{lem}[defn]{Lemma}
+\newtheorem{prop}[defn]{Proposition}
+\newtheorem{kor}[defn]{Korollar}
+
+\numberwithin{equation}{section}
+
+\DeclareMathOperator{\cond}{cond}
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\eZahl}{e}
+\DeclareMathOperator{\diff}{d}
+\DeclareMathOperator{\imag}{i}
+
+\newcommand{\ehoch}[1]{{\eZahl}^{#1}}
+
+
+
+\newcommand{\R}{\mathds{R}}
+\newcommand{\C}{\mathds{C}}
+\newcommand{\N}{\mathds{N}}
+\newcommand{\Q}{\mathds{Q}}
+\newcommand{\la}{\lambda}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\mPhi}{\mathit{\Phi}}
+\newcommand{\eqItem}{\item~\vspace{-2\normalbaselineskip}}
+\newcommand{\imaginary}{\mathrm{i}}
+\newcommand{\LskalProd}{(\,\cdot\,,\,\cdot\,)_w}
+
+\let\vphi=\phi
+\renewcommand{\phi}{\varphi}
+
+\newcommand{\transp}[1]{#1^\mathrm{T}}
+
+\begin{document}
+
+\input{Titelblatt}
+
+\tableofcontents
+
+
+
+
+
+%==========================================================================%
+% Kapitel 1 - Theorie
+%==========================================================================%
+
+\chapter{Theorie}
+
+% Überblick Kapitel und Quellen
+In diesem Kapitel soll die Funktionsweise eines Radar-Systems (\textbf{ra}dio \textbf{d}etection \textbf{a}nd \textbf{r}anging) und dessen Signalverarbeitungsalgorithmen sowie einige mathematische Grundlagen kurz erläutert werden, wie sie in ausführlicher Form auch in \cites{Richards,RSH,Ludloff} nachzulesen sind. Zudem wird eine grundlegende Einführung in die Programmierschnittstelle OpenCL gegeben, mit welcher eine Programmierung für Grafikprozessoren umgesetzt werden kann.
+
+\section{Funktionsweise eines Radars} 
+
+% Zusammenfassung
+Dieses Unterkapitel behandelt die Funktionsweise eines Radars. Falls nicht anders angegeben, stammen die hier zusammengetragenen Informationen aus \cite[Kapitel 1\&{}2]{Richards} und \cite[Kapitel 1]{Ludloff}.
+
+% Hautaufgabe Radar und weitere Fähigkeiten
+Die Hauptaufgabe eines Radars besteht darin, Objekte mittels Radiowellen zu detektieren und deren Position zu bestimmen. Dazu werden elektromagnetische Wellen über die Antenne des Radars emittiert. Diese werden an Objekten, die sich im Sichtfeld des Radars befinden, reflektiert und gelangen als \glqq  Echo\grqq ~wieder zum Radar zurück. Elektromagnetische Wellen bewegen sich in Luft (in guter Näherung) mit Lichtgeschwindigkeit, also mit knapp $ 300000 ~\text{km/s} $ fort. Die Zeit zwischen dem Aussenden und dem Empfangen der Radiowelle wird als \glqq Laufzeit\grqq ~bezeichnet. Anhand der Laufzeit, lässt sich über eine einfache Formel der Abstand zwischen dem Radar und einem reflektierenden Objekt berechnen. Neben der Entfernungsmessung sind moderne Radarsysteme dazu in der Lage, die Geschwindigkeit von detektierten Objekten zu messen (Doppler-Filterung), den Typ der Ziele zu bestimmen (Klassifikation) und deren Position nachzuverfolgen (Tracking).
+
+% Radartypen, Überleitung zum Unterkapitel
+Es gibt eine Vielzahl von verschiedenen Radar-Typen, die sich in ihrer Funktionsweise beispielsweise hinsichtlich der Sendefrequenz, Sendeleistung  oder Bauart unterscheiden. Dementsprechend existiert heute eine große Anzahl von Anwendungsmöglichkeiten, sowohl im zivilen als auch im militärischen Bereich. Im Zuge dieses Projekts wird ausschließlich ein sogenanntes \glqq Puls-Doppler-Radar\grqq ~betrachtet. 
+
+\input{Puls-Doppler-Radar}
+
+\input{Aufbau}
+
+\input{Signale}
+
+
+%--------------------------------------------------------------------------%
+
+\section{Radarsignalverarbeitung}
+
+\input{Pulskompression}
+\input{Dopplerfilterung}
+\input{Betrags-Bildung}
+\input{CFAR}
+
+%--------------------------------------------------------------------------%
+
+\section{Fouriertransformation}
+Um ein genaueres Verständnis der Fouriertransformation (FT) zu geben, welche im letzten Abschnitt zur Gewinnung des Spektrums eines empfagenen Zeitsignal verwendet wurde, soll diese hier eingeführt und deren wichtigste Aussagen zusammengefasst werden. Zunächst wird die FT in ihrer allgemeinen, kontinuierlichen Form definiert, daraufhin wird sie für diskrete Signale untersucht und schließlich der Algorithmus der schnellen Fouriertransformation (FFT - Fast Fourier Transform) beschrieben. In Form der FFT kommt die Fouriertransformation in der in \cref{chap:Projekt} vorgestellten Implementierung zum Einsatz.
+
+\input{KFT}
+\input{DFT}
+\input{FFT}
+
+%--------------------------------------------------------------------------%
+
+\section{OpenCL}
+
+
+
+
+
+%==========================================================================%
+% Kapitel 2 - Projekt
+%==========================================================================%
+
+\chapter{Projekt}
+\label{chap:Projekt}
+
+Eine Abhandlung des bearbeiteten Projekts wird in diesem Kapitel gegeben,
+wobei zunächst die Aufgabenstellung dargelegt, dann deren Umsetzung erläutert und zuletzt eine Verifikation und Bewertung der Ergebnisse durchgeführt wird.
+
+\section{Anforderungen}
+
+%--------------------------------------------------------------------------%
+
+\section{Implementierung}
+
+\subsection{Matlab-Implementierung}
+\subsection{Open-CL-Implementierung der Signalverarbeitungskette}
+
+%--------------------------------------------------------------------------%
+
+\section{Verifikation}
+
+\subsection{Tests}     
+\subsection{Benchmarks}
+
+%--------------------------------------------------------------------------%
+
+\section{Zusammenfassung und Fazit}
+
+%--------------------------------------------------------------------------%
+
+
+
+\appendix
+
+%==========================================================================%
+% Anhang A - Algorithmen
+%==========================================================================%
+
+\chapter{Algorithmen}
+
+
+
+
+
+%==========================================================================%
+% Anhang B - Quellcode
+%==========================================================================%
+
+\chapter{Quellcode}
+
+
+
+
+
+\input{Literatur}
+
+\end{document}1

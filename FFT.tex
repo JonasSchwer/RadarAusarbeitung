@@ -1,0 +1,81 @@
+%FFT
+
+\subsection{Schnelle Fouriertransformation}
+Bei der schnellen Fouriertransformation (Fast Fourier Transform, FFT) soll der Aufwand durch eine "Teile und Herrsche"-Herangehensweise verkleinert werden, was dann besonders gut gelingt, wenn die Anzahl der Stützstellen eine Zweierpotenz ist.
+Sei daher oBdA
+\begin{displaymath}
+    N = 2^m, \quad m\in\N,
+\end{displaymath}
+ansonsten werde der Daten-Vektor bis zu nächsten Zweierpotenz mit Nullen aufgefüllt. Unter Einführung der Abkürzung
+$\gamma_N = \ehoch{-2\imag\pi/N}$ lässt sich die Diskrete Fouriertransformation DFT($N$) schreiben als
+\begin{displaymath}
+\hat{c}_k = \frac{1}{N} \sum^{N-1}_{j=0} f_j {\gamma_N}^{kj} =: \frac{1}{N} \hat{f}_k, \qquad k=0,\ldots,N-1.
+\end{displaymath}
+Betrachtet man unter Vernachlässigung der Saklaierung mit $\frac{1}{N}$ die eben einegeführte Größe $\hat{f}_k = N\hat{c}_k, ~ k=0,\ldots,N-1$ und teilt man die Summe auf wie folgt,
+\begin{displaymath}
+\hat{f}_k =  \sum^{\frac{N}{2}-1}_{j=0} f_j {\gamma_N}^{kj} +  \sum^{\frac{N}{2}-1}_{j=0} f_{\frac{N}{2}+j} {\gamma_N}^{k(\frac{N}{2}+j)}, \qquad k=0,\ldots,N-1,
+\end{displaymath}
+so kann man die Summanden für $k$ gerade und ungerade getrennt betrachten:
+\begin{itemize}
+
+\item \textbf{Fall Gerade:} $k=2\ell, \quad l=0,1,\ldots,\frac{N}{2}-1$. \\
+Da
+\begin{displaymath}
+{\gamma_N}^{kj} = {\gamma_N}^{2\ell j} = \ehoch{\frac{-4\ell j\imag\pi}{N}} = \ehoch{\frac{-2\ell j\imag\pi}{N/2}} = {\gamma_\frac{N}{2}}^{\ell j}
+\quad\text{ und }\quad
+{\gamma_N}^{k(\frac{N}{2}+j)} = \underbrace{{\gamma_N}^{\ell N}}_{=1} {\gamma_N}^{2\ell j} = {\gamma_\frac{N}{2}}^{\ell j}
+\end{displaymath}
+gilt
+\begin{displaymath}
+\hat{f}_{2\ell} =  \sum^{\frac{N}{2}-1}_{j=0} (f_j+f_{\frac{N}{2}+j}){\gamma_{\frac{N}{2}}}^{\ell j}, \qquad \ell=0,\ldots,\frac{N}{2}-1.
+\end{displaymath}
+
+\item \textbf{Fall Ungerade:} $k=2\ell+1, \quad l=0,1,\ldots,\frac{N}{2}-1$. \\
+Analog ist
+\begin{displaymath}
+{\gamma_N}^{(2\ell+1)j} = {\gamma_N}^{j}{\gamma_N}^{2\ell j} = {\gamma_N}^{j}{\gamma_\frac{N}{2}}^{\ell j}
+\end{displaymath}
+und
+\begin{displaymath}
+{\gamma_N}^{(2\ell+1)(\frac{N}{2}+j)} = \underbrace{{\gamma_N}^{(2\ell+1)\frac{N}{2}}}_{=-1} {\gamma_N}^{(2\ell+1)j}   = -{\gamma_N}^{j}{\gamma_\frac{N}{2}}^{\ell j},
+\end{displaymath}
+weswegen sich die ungeraden Fourierkoeffizienten mit
+\begin{displaymath}
+\hat{f}_{2\ell+1} =  \sum^{\frac{N}{2}-1}_{j=0} f_j {\gamma_N}^{(2\ell+1)j} + \sum^{\frac{N}{2}-1}_{j=0} f_{\frac{N}{2}+j} {\gamma_N}^{(2\ell+1)(\frac{N}{2}+j)} =  \sum^{\frac{N}{2}-1}_{j=0} (f_j - f_{\frac{N}{2}+j}  ) {\gamma_N}^j {\gamma_{\frac{N}{2}}}^{lj}
+\end{displaymath}
+angeben lassen, für $\ell=0,\ldots,\frac{N}{2}-1$. 
+\end{itemize}
+
+Eine Diskrete Fouriertransformation mit $N$ Stützstellen (DFT($N$)) lässt sich also mit $\frac{3}{2}N$ Operationen in zwei DFT($\frac{N}{2}$) zerlegen. Führt man dies sukzessive fort, bis man eine Zerlegung in $m$ DFT(1) erhält, welche der Identitätsabbildung entsprechen und keinen Aufwand haben, so bleiben nur die Rechenoperationen der Zerlegung übrig. Hier hat man für jedes $k=0,\ldots,m-1$ einen Aufwand von
+\begin{displaymath}
+2^k \frac{3}{2} \frac{N}{2^k} = \frac{3}{2} N
+\end{displaymath}
+Operationen. Damit ergeben sich insgesamt $m \frac{3}{2} N = \frac{3}{2} N \log_2 N$ Rechenschritte. Die FFT hat also einen Aufwand von
+\begin{displaymath}
+\calO(N \log_2N)
+\end{displaymath}
+statt $\calO(N^2)$ wie es für die DFT der Fall war. \\
+Der Gesamtablauf der schnellen Fouriertransformation ist in \cref{FFT} gegeben.
+
+\begin{algorithm}[H]
+	\caption{FFT: $\quad \hat{c} = \calF_N f, \quad f\in\C^N$ gegeben, $N=2^m,~m\in\N$.}
+	\label{FFT}
+	
+	\begin{algorithmic}
+	    \State{$n=N$}
+		\For{ $k = 0,\ldots,m-1$}
+		    \State{$\gamma_n = \ehoch{-2\imag\pi/n} $}
+	        \For{$p= 0,\ldots,2^{k}-1$}
+	            \State{$b = 2^{m-k}p$}
+	            \For{$\ell = 0,\ldots,2^{m-k-1}-1$}
+	                \State{$\hat{f}_{l+b} = f_{l+b}+f_{l+b+2^{m-k+1}}$}
+	                \State{$\hat{f}_{l+b+2^{m-k+1}} = f_{l+b}-f_{l+b+2^{m-k+1}} {\gamma_n}^{\ell-1}$}
+	            \EndFor
+	         \EndFor
+	         \State{$f = \hat{f}$}
+	         \State{$n=\frac{n}{2}$}	
+		\EndFor
+		\State{$\hat{c} = \frac{1}{N}f$}
+	\end{algorithmic}
+\end{algorithm}
+

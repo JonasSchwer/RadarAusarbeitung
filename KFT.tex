@@ -1,0 +1,33 @@
+%KFT
+
+\subsection{Kontinuierliche FT}
+
+\begin{defn}[\cite{BurgHaf}*{Definition 8.3}]
+    Sei $f: \R\to\R$ stückweise stetig und absolut integrierbar. Gilt für $\hat{f}: \R\to\R$ die Zuordnung
+    \begin{displaymath}
+        \hat{f}(s) = \frac{1}{2\pi} \int_{-\infty}^{\infty}  f(t) \ehoch{-{\imag}st} {\diff}t, \quad s\in\R ,
+    \end{displaymath}
+    so nennt man $\hat{f}$ die \emph{Fouriertransformierte von f}. Man schreibt für $\hat{f}$ auch $\calF f$. Der Operator $\calF$ heißt dann \emph{Fouriertransformation}.
+
+\end{defn}
+
+\begin{satz}[\cite{BurgHaf}*{Satz 8.1}]
+    Ist $\hat{f}$ die Fourier-Transformierte von $f$, so gilt
+    \begin{displaymath}
+        f(t) = \int_{-\infty}^{\infty}  \hat{f}(s) \ehoch{{\imag}ts} {\diff}s, \quad t\in\R.
+    \end{displaymath}
+\end{satz}
+\begin{proof}
+    Siehe Quelle.
+\end{proof}
+
+\begin{satz}[\cite{BurgHaf}*{Satz 8.5}]
+    Seien $f_1,f_2$ stetige, beschränkte und absolut integrierbare Funktionen in $\R$. Für deren Faltung $f_1 * f_2$ gilt:
+    \begin{displaymath}
+      \calF(f_1 * f_2) = \calF f_1 ~ \calF f_2.
+    \end{displaymath}
+\end{satz}
+\begin{proof}
+    Siehe Quelle.
+\end{proof}
+
