@@ -122,6 +122,7 @@ Es gibt eine Vielzahl von verschiedenen Radar-Typen, die sich in ihrer Funktions
 %--------------------------------------------------------------------------%
 
 \section{Radarsignalverarbeitung}
+Die Daten-Matrix $M_0 \in \C^{m \times n}$ sei mit den abgetasteten Empfangsdaten initialisiert, wie in \cref{subsec:Signale} beschrieben, d.h. die Zeilen von $M_0$ enthalten jeweils das Echo eines Pulses, die Spalten bilden dann ein sogenanntes Range-Bin mit Echos aus gleicher Entfernung. Um die Daten zu Erkennung und Verfolgung von Zielobjekten nutzen zu können, durchlaufen sie vorerst eine Signalverarbeitungskette, in welcher Rauschen vermindert, Echos verstärkt und die Geschwindigkeit eines Objekt über den Doppler-Effekt ermittelt wird.
 
 \input{Pulskompression}
 \input{Dopplerfilterung}

@@ -1,3 +1,23 @@
 %Pulskompression
 
 \subsection{Pulskompression}
+Zunächst wird eine Pulskompression durchgeführt. Dies bewirkt, dass sich im Rauschen verborgene Echos in ihrer Amplitude verstärken und ihre Domäne sich verkleinert. Dadurch kann ein Echo sicher und scharf lokalisiert werden. Zunutze macht man sich hierbei das Prinzip des Optimalfilters (Matched Filter, \cite{RSH}*{20.2}), welcher im Empfangssignal nach einem Echo des Sendesignals sucht und dieses dann verstärkt. Dies geschieht, indem das Empfangene Signal mit dem Sendesignal gefaltet wird.
+\begin{defn}
+Sei $s:~[0,\tau] \to \C$ das Sendesignal und $r:~[\tau,\text{PRI}]\to\C$ das Empfangssignal. Die Pulskompression bzw. der Optimalfilter für diese Anwendung ist gegeben durch
+\begin{displaymath}
+G(r,s)(t) = a \int_{\Omega(t)} r(x)s^*(x-t)dx, \quad t\in [0,\text{PRI}],~\Omega(t)\subset\C,~a\in\R,
+\end{displaymath}
+wobei $\Omega(t)$ stets so gewählt wird, dass der Definitionsbereich von $s$ ausgeschlöpft wird.
+Die Pulskompression entspricht also der Faltung des Empfangssignal mit dem zeitinvertierten und komplex konjugierten Sendesignal.
+\end{defn}
+
+Im jetzt betrachteten disrekten Fall, ist $r\in\C^n$ eine Zeile der Daten-Matrix $M_0$ und $s\in\C^p$ ein Vektor, der eine Abtastung des Sendesignals mit gleicher Rate beinhaltet. Der pulskomprimierte Datenvektor $y\in\C^{n+p}$ ergibt sich dann durch
+
+
+\begin{displaymath}
+y_k = a \sum_{j = \alpha}^{\beta} r_j s^*_{k-j+1}
+\end{displaymath}
+wobei
+\begin{displaymath}
+k=1,\ldots,n+p,\quad\alpha=\max\{0,k+1-n\},\quad\beta= \min\{k,m\}.
+\end{displaymath}
