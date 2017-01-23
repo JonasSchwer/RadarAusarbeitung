@@ -1,3 +1,11 @@
 %Dopplerfilterung
 
 \subsection{Dopplerfilterung}
+Bewegt sich ein Zielobjekt radial zur Radar-Antenne, d.h. es entfernt sich von ihr oder nähert sich, kann die Geschwindigkeit dieser Bewegung über den vom Dopplereffekt hervorgerufenen Frequenz-Shift und durch die Phasenverschiebung zwischen zwei Pulsen ermittelt werden.
+Bewegt sich das Zielobjekt mit der Geschwindigkeit $v$ auf das Radar-System zu und ist zum Zeiptunkt des ersten Pulses $r_0$ entfernt, so hat es sich bis zum nächsten Puls um die Strecke der länge $v\cdot\text{PRI}$ genähert. Diese Änderung der radialen Lage mag aufgrund geringer Geschwindigkeiten $v$ gegenüber kleiner Pulse-Wiederholintervalle PRI bei gegebener Abtastrate des Empfangssignals nicht messbar sein. Jedoch kann die hierdurch hervorgerufene Änderung der empfangenen Phase von Puls zu Puls ermittelt werden. Zudem ändert sich nach den Regeln des Doppler-Effekts die Frequenz des Echo-Signals. In den entsprechenden Spalten der Daten-Matrix $M_0$ sich hierdurch eine Frequenz, welche ermittelt werden kann und von der auf die Geschwindigkeit des Zielobjektes geschlossen werden kann.
+
+Zur Ermittlung der Frequenz des Signals von Puls zu Puls, also in einer Spalte, wird eine Fouriertransformation auf die Spalten von $M_0$ ausgeführt, wie sie in \cref{sec:FT} beschrieben wird. Ergibt sich hierbei die von Null verschiedene sogenannte Dopplerfrequenz $F_D$, kann daraus die Geschwindigkeit des Zielobjekts über die gerundete Darstellung 
+\begin{displaymath}
+v = \frac{c}{2} \frac{F_D}{F_c}
+\end{displaymath}
+wobei $c$ die Lichtgeschwindigkeit und $F_c$ die mittlere Frequenz des hochfrequenten Sendesignals aus \cref{subsec:Signale} ist.
